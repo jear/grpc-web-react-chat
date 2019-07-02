@@ -8,6 +8,7 @@
     "grpc": "^1.19.0",
     "grpc-web": "^1.0.4",
     "react": "^16.8.6",
+    "react-bootstrap": "^1.0.0-beta.9",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1"
   },
