@@ -22,7 +22,7 @@ static_resources:
               routes:
               - match: { prefix: "/" }
                 route:
-                  cluster: ping_pong_service
+                  cluster: chat_service
                   max_grpc_timeout: 0s
               cors:
                 allow_origin:
@@ -34,9 +34,9 @@ static_resources:
           - name: envoy.cors
           - name: envoy.router
   clusters:
-  - name: ping_pong_service
+  - name: chat_service
     connect_timeout: 0.25s
     type: logical_dns
     http2_protocol_options: {}
     lb_policy: round_robin
-    hosts: [{ socket_address: { address: host.docker.internal, port_value: 8080 }}]
+    hosts: [{ socket_address: { address: host.docker.internal, port_value: 8980 }}]

@@ -3,6 +3,13 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Prerequisites
 ### `docker-compose up -d`
 
+### Generate Protobuf Messages and Client Service Stub
+```sh
+$ protoc -I=. chat.proto \
+  --js_out=import_style=commonjs:. \
+  --grpc-web_out=import_style=commonjs,mode=grpcwebtext:.
+```
+
 ## Run Client
 
 In the learn-react-grpc project directory, you can run:
