@@ -3,7 +3,6 @@ syntax = "proto3";
 option java_multiple_files = true;
 option java_package = "grpc.chat";
 
-
 message LoginRequest {
     string userName = 1;
     string password = 2;
@@ -14,13 +13,10 @@ message LoginResponse {
     string token = 2;
 }
 
-
-
 message SendMessageRequest {
     Message message = 1;
     string token = 3;
 }
-
 
 message SendMessageResponse {
     string status = 1;
@@ -37,7 +33,6 @@ message Message {
 message ReceiveMessageRequest {
     string token = 1;
 }
-
 
 service ChatServer {
     rpc Login(LoginRequest) returns (LoginResponse);

@@ -13,7 +13,7 @@
 */npm-debug.log*
 
 # java targets
-*/.idea
-*/target
+*/*/.idea
+*/*/target
 
 
