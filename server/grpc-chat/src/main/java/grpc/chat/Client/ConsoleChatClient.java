@@ -41,8 +41,7 @@ public class ConsoleChatClient {
 
         chat = asyncStub.chat(new StreamObserver<Message>() {
             public void onNext(Message message) {
-                System.out.println(message);
-                if (state.userName.equals(message.getTo())) {
+                if (!state.userName.equals(message.getFrom())) {
                     System.out.println("New Message From " + message.getFrom() + ":" + message.getMessageText());
                 }
             }

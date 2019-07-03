@@ -44,3 +44,6 @@ $ java -cp  target/grpc-chat-1.0-SNAPSHOT-jar-with-dependencies.jar grpc.chat.Se
 ![login](login.png)
 ![web client](WebClient-1.png)
 ![web client](WebClient-2.png)
+
+## Slides
+[slides.pdf](https://github.com/jofen-misc/grpc-web-react-chat/slides.pdf)

@@ -42,8 +42,7 @@ class App extends React.Component {
       if (response == null) {
          console.log(err)
        } else {
-        this.state.token = response.getToken();
-        this.setState({ submitted: true, username: this.state.username, password: this.state.password, token: this.state.token });
+        this.setState({ submitted: true, username: this.state.username, password: this.state.password, token: response.getToken() });
        }
       });
 

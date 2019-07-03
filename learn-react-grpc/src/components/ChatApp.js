@@ -20,10 +20,10 @@ class ChatApp extends Component {
     var stream = this.props.client.receiveMessage(streamRequest, {});
     stream.on('data', (response) => {
       var message = response.getMessagetext();
-      var to = response.getTo();
-      if (this.props.username == to) {
+      var from = response.getFrom();
+      if (this.props.username !== from) {
         const messageObject = {
-          username: response.getFrom(),
+          username: from,
           fromMe: false,
           message: message
         };
@@ -45,12 +45,7 @@ class ChatApp extends Component {
     // Emit the message to the server
     var body = new Message();
     // todo: ui to select which user to chat with
-    if (this.props.username == 'user1') {
-      body.setTo('user2');
-    } else {
-      body.setTo('user1');
-    }
-  
+    body.setTo('user1');
 
     body.setFrom(this.props.username);
     body.setMessagetext(message);
