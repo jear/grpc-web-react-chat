@@ -11,6 +11,7 @@ import io.grpc.stub.StreamObserver;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -65,6 +66,7 @@ public class ChatService extends ChatServerGrpc.ChatServerImplBase {
                 Message message = Message.newBuilder()
                         .setMessageText(request.getMessage().getMessageText())
                         .setFrom(from)
+                        .setTo(request.getMessage().getTo())
                         .build();
                 observer.onNext(message);
             }
@@ -93,6 +95,41 @@ public class ChatService extends ChatServerGrpc.ChatServerImplBase {
             responseObserver.onNext(message);
             redisService.removeLastMessage(receiver);
         }
+    }
+
+    @Override
+    public StreamObserver<SendMessageRequest> chat(final StreamObserver<Message> responseObserver) {
+        observers.add(responseObserver);
+
+        return new StreamObserver<SendMessageRequest>() {
+            public void onNext(SendMessageRequest request) {
+                String from;
+                try {
+                    String token = request.getToken();
+                    from = JWTService.getJwtService().parseJwt(token);
+                } catch (Exception e) {
+                    logger.log(Level.WARNING, "exception parsing token: " + e.getMessage());
+                }
+                Message message = Message.newBuilder()
+                        .setMessageText(request.getMessage().getMessageText())
+                        .setFrom(request.getMessage().getFrom())
+                        .setTo(request.getMessage().getTo())
+                        .build();
+
+                for (StreamObserver<Message> observer : observers) {
+                    observer.onNext(message);
+                }
+            }
+
+            public void onError(Throwable t) {
+                logger.log(Level.WARNING, "chat cancelled: " + t.getMessage());
+            }
+
+            public void onCompleted() {
+                responseObserver.onCompleted();
+                observers.remove(responseObserver);
+            }
+        };
     }
 
     private boolean userExists(String userName) {

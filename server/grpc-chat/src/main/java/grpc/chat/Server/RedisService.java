@@ -42,6 +42,7 @@ class RedisService {
         return Message.newBuilder()
                 .setMessageText(messageString[1])
                 .setFrom(messageString[0])
+                .setTo(receiver)
                 .build();
     }
 

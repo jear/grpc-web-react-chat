@@ -38,3 +38,8 @@ Navigate to the server/grpc-chat project directory, you can then build and run t
 $ mvn clean compile assembly:single
 $ java -cp  target/grpc-chat-1.0-SNAPSHOT-jar-with-dependencies.jar grpc.chat.Server.ChatServer
 ```
+
+## Screenshots
+![bidirectional streaming console client](ConsoleClient.png)
+![web client](WebClient-1.png)
+![web client](WebClient-2.png)

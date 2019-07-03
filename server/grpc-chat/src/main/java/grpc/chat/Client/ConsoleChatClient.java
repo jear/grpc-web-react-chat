@@ -8,6 +8,7 @@ import grpc.chat.SendMessageRequest;
 import grpc.chat.SendMessageResponse;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.stub.StreamObserver;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
@@ -20,6 +21,8 @@ public class ConsoleChatClient {
     private final ManagedChannel channel;
     private final ChatServerGrpc.ChatServerBlockingStub blockingStub;
     private final ChatServerGrpc.ChatServerStub asyncStub;
+
+    private final StreamObserver<SendMessageRequest> chat;
 
     /**
      * Construct client for accessing RouteGuide server at {@code host:port}.
@@ -35,6 +38,24 @@ public class ConsoleChatClient {
         channel = channelBuilder.build();
         blockingStub = ChatServerGrpc.newBlockingStub(channel);
         asyncStub = ChatServerGrpc.newStub(channel);
+
+        chat = asyncStub.chat(new StreamObserver<Message>() {
+            public void onNext(Message message) {
+                System.out.println(message);
+                if (state.userName.equals(message.getTo())) {
+                    System.out.println("New Message From " + message.getFrom() + ":" + message.getMessageText());
+                }
+            }
+
+            public void onError(Throwable t) {
+                t.printStackTrace();
+                System.out.println("ReceiveMessage Error");
+            }
+
+            public void onCompleted() {
+                System.out.println("ReceiveMessage Completed");
+            }
+        });
     }
 
     public void shutdown() throws InterruptedException {
@@ -144,7 +165,7 @@ public class ConsoleChatClient {
             state.setUserName(userName);
 
             //Executors.newScheduledThreadPool(2).scheduleAtFixedRate(new ReceiveMessage(asyncStub, loginResponse.getToken()), 0, 1, TimeUnit.SECONDS);
-            Executors.newScheduledThreadPool(2).schedule(new ReceiveMessage(asyncStub, userName, loginResponse.getToken()), 1, TimeUnit.SECONDS);
+            //Executors.newScheduledThreadPool(2).schedule(new ReceiveMessage(asyncStub, userName, loginResponse.getToken()), 1, TimeUnit.SECONDS);
         }
     }
 
@@ -154,6 +175,7 @@ public class ConsoleChatClient {
                         Message.newBuilder()
                                 .setMessageText(message)
                                 .setTo(receiver)
+                                .setFrom(state.userName)
                                 .build())
                 .setToken(state.getToken())
                 .build();
@@ -170,14 +192,15 @@ public class ConsoleChatClient {
             return;
         }
 
-        SendMessageResponse sendMessageResponse = blockingStub.sendMessage(sendMessageRequest);
-
-        if (!sendMessageResponse.getStatus().toLowerCase().contains("sent")) {
-            System.out.print(sendMessageResponse.getStatus());
-            System.out.println(" To:" + receiver);
-        } else {
-            System.out.println(sendMessageResponse.getStatus());
-        }
+        // client streaming
+        chat.onNext(sendMessageRequest);
+//        SendMessageResponse sendMessageResponse = blockingStub.sendMessage(sendMessageRequest);
+//        if (!sendMessageResponse.getStatus().toLowerCase().contains("sent")) {
+//            System.out.print(sendMessageResponse.getStatus());
+//            System.out.println(" To:" + receiver);
+//        } else {
+//            System.out.println(sendMessageResponse.getStatus());
+//        }
     }
 
     private boolean check3mIn5s() {

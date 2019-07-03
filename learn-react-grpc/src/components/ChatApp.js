@@ -44,7 +44,14 @@ class ChatApp extends Component {
 
     // Emit the message to the server
     var body = new Message();
-    body.setTo('user1');
+    // todo: ui to select which user to chat with
+    if (this.props.username == 'user1') {
+      body.setTo('user2');
+    } else {
+      body.setTo('user1');
+    }
+  
+
     body.setFrom(this.props.username);
     body.setMessagetext(message);
 
