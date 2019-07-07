@@ -9,6 +9,11 @@ From the repo root directory:
 $ docker-compose up -d
 ```
 
+Add user/password set to redis:
+```sh
+127.0.0.1:6379> hset userNamePasswordMap user1 "pass1"
+```
+
 ### Generate Protobuf Messages and Client Service Stub
 For generating client-side code in javascript, run the following command:
 ```sh
