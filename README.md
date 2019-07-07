@@ -39,11 +39,11 @@ $ mvn clean compile assembly:single
 $ java -cp  target/grpc-chat-1.0-SNAPSHOT-jar-with-dependencies.jar grpc.chat.Server.ChatServer
 ```
 
+### bidirectional streaming console client
+Follow the README under server/grpc-chat to run the bidirectional streaming Java console client
+
 ## Screenshots
-![bidirectional streaming console client](ConsoleClient.png)
-![login](login.png)
-![web client](WebClient-1.png)
-![web client](WebClient-2.png)
+![screenshot](ScreenShot.png)
 
 ## Slides
 [slides.pdf](https://github.com/jofen-misc/grpc-web-react-chat/blob/master/slides.pdf)
